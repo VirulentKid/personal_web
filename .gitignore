@@ -1,0 +1,11 @@
+# IDE and Editor files
+.cursorrules
+
+# macOS system files
+.DS_Store
+
+# Other common files to ignore
+*.log
+node_modules/
+dist/
+.env 
