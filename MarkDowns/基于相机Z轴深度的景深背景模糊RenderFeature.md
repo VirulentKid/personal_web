@@ -1,6 +1,6 @@
 # 基于相机Z轴深度的景深背景模糊RenderFeature
 
-![93248e5892ab6178e8570a7d763a9333.png](https://alidocs.oss-cn-zhangjiakou.aliyuncs.com/res/1GXn4BAKzpbMODQ4/img/71d84fdd-2d3e-4612-97f4-6ee16526c34c.png)
+![dof_feature.png](../images/dof_feature.png)
 
 # 介绍
 
@@ -16,7 +16,7 @@
 
 此feature大致follow了GTA5中镜头景深的管线流程，如下图所示
 
-![image.png](https://alidocs.oss-cn-zhangjiakou.aliyuncs.com/res/1GXn4BAKzpbMODQ4/img/606e8b59-2e1d-4b93-8351-bfbb56f94ad1.png)
+![dof_pipeline.png](../images/dof_pipeline.png)
 
 该管线需要从从相机视角下渲染的Z-depth得到一张COC\[1\] RT, 以此对相机纯光栅化得到的完全清晰的RT以及利用算法得到的模糊贴图做插值，可以得到近似于真实相机的景深效果。（具体原理可以看文末的参考）
 
@@ -24,21 +24,21 @@
 
 ### 模糊贴图流程
 
-![image.png](https://alidocs.oss-cn-zhangjiakou.aliyuncs.com/res/1GXn4BAKzpbMODQ4/img/fc703a43-a34b-4b67-aee0-f4dc2eada564.png)
+![dof_blur_process.png](../images/dof_blur_process.png)
 
 ### 最终效果合成
 
-![image.png](https://alidocs.oss-cn-zhangjiakou.aliyuncs.com/res/1GXn4BAKzpbMODQ4/img/30e478a4-7f06-41db-b88a-032ab444f3a5.png)
+![dof_final.png](../images/dof_final.png)
 
 # 部署
 
 自动对焦：
 
-![image.png](https://alidocs.oss-cn-zhangjiakou.aliyuncs.com/res/1GXn4BAKzpbMODQ4/img/85ea0364-2f01-43ba-9336-4b8b13d4ac08.png)
+![dof_auto_focus.png](../images/dof_auto_focus.png)
 
 自动对焦的参数作用参考
 
-![对焦速度方程.gif](https://alidocs.oss-cn-zhangjiakou.aliyuncs.com/res/1GXn4BAKzpbMODQ4/img/2c47bceb-1592-4886-8706-7b3a0ce39321.gif)
+![dof_focus_speed.gif](../images/dof_focus_speed.gif)
 
 该脚本有程序化调整 bokeh radius, focus distance 和 focus range的方法，具体可参考以下路径中存放的API以及脚本本身代码实现（用浏览器打开html文件即可）：Assets/Render\_UMP/RenderBase/Docs/html/class\_depth\_of\_field\_on\_z\_axis\_auto\_focus\_controller.html
 
@@ -49,7 +49,7 @@
     1.  **检查除去该景深外其他的render feature中是否被清理了Depth，需要取消勾选其Clear Depth按钮，并重新激活该景深的render feature**
         
 
-![image.png](https://alidocs.oss-cn-zhangjiakou.aliyuncs.com/res/1GXn4BAKzpbMODQ4/img/7efac80b-4de1-45ec-bfac-2930c6004ba5.png)
+![dof_bug_fix.png](../images/dof_bug_fix.png)
 
 2.  **MSAA会disable相机深度图，需要关闭MSAA**
     
@@ -62,17 +62,17 @@
 
 ### 光斑（bokeh）左图为简单高斯，右边为增加光斑后
 
-![image.png](https://alidocs.oss-cn-zhangjiakou.aliyuncs.com/res/1GXn4BAKzpbMODQ4/img/8fc318c7-01f4-4ce9-83d2-954b0959fd9b.png)
+![dof_bokeh_comparison.png](../images/dof_bokeh_comparison.png)
 
 ### 自动对焦以及动态bokeh调整
 
-![dofOnZ.gif](https://alidocs.oss-cn-zhangjiakou.aliyuncs.com/res/1GXn4BAKzpbMODQ4/img/c5fe847f-3a2c-4db5-9ecb-6697d9defa63.gif)
+![dof_dynamic.gif](../images/dof_dynamic.gif)
 
 真实相机对焦动作对比
 
-![focus.gif](https://alidocs.oss-cn-zhangjiakou.aliyuncs.com/res/1GXn4BAKzpbMODQ4/img/5eee19d7-8bcf-44d7-916f-7678f63bd24d.gif)
+![dof_real_camera.gif](../images/dof_real_camera.gif)
 
-![cj-uwu.gif](https://alidocs.oss-cn-zhangjiakou.aliyuncs.com/res/1GXn4BAKzpbMODQ4/img/d4c78d2a-7503-43a6-8a79-2e1fe5316b40.gif)
+![dof_demo.gif](../images/dof_demo.gif)
 
 # 参考
 
