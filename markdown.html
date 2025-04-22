@@ -1,0 +1,203 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Markdown Viewer</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="assets/css/main.css" />
+    <style>
+        .markdown-content {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2em;
+            background: #ffffff;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            border-radius: 5px;
+            font-size: 16px;
+            line-height: 1.6;
+            color: #333;
+        }
+        .markdown-content img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 1.5em auto;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .markdown-content h1 {
+            font-size: 1.8em;
+            color: #2c3e50;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 0.3em;
+            margin-top: 1.5em;
+            margin-bottom: 1em;
+        }
+        .markdown-content h2 {
+            font-size: 1.5em;
+            color: #34495e;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 0.3em;
+            margin-top: 1.3em;
+            margin-bottom: 0.8em;
+        }
+        .markdown-content h3 {
+            font-size: 1.3em;
+            color: #444;
+            margin-top: 1.2em;
+            margin-bottom: 0.6em;
+        }
+        .markdown-content code {
+            background: #f8f9fa;
+            padding: 0.2em 0.4em;
+            border-radius: 3px;
+            font-family: Consolas, Monaco, 'Andale Mono', monospace;
+            font-size: 0.9em;
+            color: #e83e8c;
+        }
+        .markdown-content pre code {
+            display: block;
+            padding: 1em;
+            overflow-x: auto;
+            line-height: 1.45;
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            color: #333;
+        }
+        .markdown-content blockquote {
+            border-left: 4px solid #6c757d;
+            padding: 0.5em 1em;
+            margin: 1em 0;
+            background: #f8f9fa;
+            color: #666;
+        }
+        .markdown-content ul, .markdown-content ol {
+            padding-left: 2em;
+            margin: 1em 0;
+        }
+        .markdown-content p {
+            margin: 1em 0;
+            line-height: 1.6;
+        }
+        .markdown-content table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 1em 0;
+        }
+        .markdown-content table th,
+        .markdown-content table td {
+            padding: 0.5em;
+            border: 1px solid #ddd;
+        }
+        .markdown-content table th {
+            background: #f8f9fa;
+        }
+        #loading {
+            text-align: center;
+            padding: 2em;
+            display: none;
+            color: #666;
+        }
+    </style>
+    <noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+</head>
+<body class="is-preload">
+
+    <!-- Wrapper -->
+    <div id="wrapper">
+
+        <!-- Header -->
+        <header id="header">
+            <a href="index.html" class="logo">返回主页</a>
+        </header>
+
+        <!-- Nav -->
+        <nav id="nav">
+            <ul class="links">
+                <li><a href="index.html">Projects</a></li>
+                <li><a href="games.html">Games</a></li>
+                <li><a href="3d.html">3D Models</a></li>
+            </ul>
+            <ul class="icons">
+                <li><a href="https://www.linkedin.com/in/guanlin-huang-4406668502/" class="icon brands fa-linkedin"><span class="label">LinkedIn</span></a></li>
+                <li><a href="https://github.com/VirulentKid" class="icon brands fa-github"><span class="label">GitHub</span></a></li>
+            </ul>
+        </nav>
+
+        <!-- Main -->
+        <div id="main">
+            <div id="loading">Loading...</div>
+            <article class="post featured">
+                <div class="markdown-content" id="content">
+                    <!-- Markdown content will be loaded here -->
+                </div>
+            </article>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/jquery.scrollex.min.js"></script>
+    <script src="assets/js/jquery.scrolly.min.js"></script>
+    <script src="assets/js/browser.min.js"></script>
+    <script src="assets/js/breakpoints.min.js"></script>
+    <script src="assets/js/util.js"></script>
+    <script src="assets/js/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script>
+        // Function to get URL parameters
+        function getUrlParameter(name) {
+            name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+            var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+            var results = regex.exec(location.search);
+            return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+        }
+
+        // Function to load and render markdown
+        function loadMarkdown() {
+            const file = getUrlParameter('file');
+            if (!file) {
+                document.getElementById('content').innerHTML = '<h1>No file specified</h1>';
+                return;
+            }
+
+            document.getElementById('loading').style.display = 'block';
+            
+            const xhr = new XMLHttpRequest();
+            xhr.open('GET', file, true);
+            
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    console.log('File content loaded, length:', xhr.responseText.length);
+                    document.getElementById('content').innerHTML = marked.parse(xhr.responseText);
+                } else {
+                    console.error('Error loading file:', xhr.statusText);
+                    document.getElementById('content').innerHTML = `
+                        <h1>Error loading file</h1>
+                        <p>Error details: ${xhr.statusText}</p>
+                        <p>Status code: ${xhr.status}</p>
+                        <p>Attempted to load: ${file}</p>
+                    `;
+                }
+                document.getElementById('loading').style.display = 'none';
+            };
+            
+            xhr.onerror = function() {
+                console.error('Request failed');
+                document.getElementById('content').innerHTML = `
+                    <h1>Error loading file</h1>
+                    <p>Network error occurred</p>
+                    <p>Attempted to load: ${file}</p>
+                `;
+                document.getElementById('loading').style.display = 'none';
+            };
+            
+            console.log('Attempting to load file:', file);
+            xhr.send();
+        }
+
+        // Load markdown when page loads
+        window.addEventListener('load', loadMarkdown);
+    </script>
+</body>
+</html> 
